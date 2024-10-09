@@ -277,6 +277,7 @@
                     </div>
                     <div class="song-info">
                         <img src="assets/player.png">
+                    
                         <div class="description">
                             <h3>Ripple Echoes</h3>
                             <h5>Kael Fischer</h5>
@@ -291,12 +292,12 @@
                     </div>
                 </div>
 
-                <div class="player-actions">
+                  <div class="player-actions">
                     <div class="buttons">
                         <i class='bx bx-repeat'></i>
-                        <i class='bx bx-first-page'></i>
-                        <i class='bx bxs-right-arrow play-button'></i>
-                        <i class='bx bx-last-page'></i>
+                        <i class='bx bx-first-page' id="prev-button"></i>
+                        <i class='bx bxs-right-arrow play-button' id="play-pause-button"></i>
+                        <i class='bx bx-last-page' id="next-button"></i>
                         <i class='bx bx-transfer-alt'></i>
                     </div>
                     <div class="lyrics">
@@ -305,6 +306,10 @@
                     </div>
                 </div>
 
+                <!-- Hidden audio element -->
+                <audio id="audio-player" preload="metadata"></audio>
+            </div>
+
             </div>
 
         </div>
@@ -312,7 +317,72 @@
 
 
 
-    <script src="script.js"></script>
+    <script>
+      
+        // List of songs
+        const songs = [
+            {
+                name: 'Ripple Echoes',
+                artist: 'Kael Fischer',
+                src: 'Music/fallingdown.mp3' 
+            },
+            {
+                name: 'Sunrise',
+                artist: 'Lila Rivera',
+                src: 'assets/sunrise.mp3',
+            },
+            {
+                name: 'Voyage',
+                artist: 'Tyde Brennnan',
+                src: 'assets/voyage.mp3',
+            }
+        ];
+
+        let currentSongIndex = 0;
+        const audioPlayer = document.getElementById("audio-player");
+        const playButton = document.getElementById("play-pause-button");
+        const nextButton = document.getElementById("next-button");
+        const prevButton = document.getElementById("prev-button");
+
+        // Function to load the current song
+        function loadSong(songIndex) {
+            const song = songs[songIndex];
+            audioPlayer.src = song.src;
+            document.getElementById('song-name').textContent = song.name;
+            document.getElementById('song-artist').textContent = song.artist;
+        }
+
+       
+        playButton.addEventListener("click", function () {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                this.classList.replace("bxs-right-arrow", "bxs-pause"); 
+            } else {
+                audioPlayer.pause();
+                this.classList.replace("bxs-pause", "bxs-right-arrow"); 
+            }
+        });
+
+        // Next button functionality
+        nextButton.addEventListener("click", function () {
+            currentSongIndex = (currentSongIndex + 1) % songs.length; 
+            loadSong(currentSongIndex);
+            audioPlayer.play();
+            playButton.classList.replace("bxs-right-arrow", "bxs-pause"); 
+        });
+
+        // Previous button functionality
+        prevButton.addEventListener("click", function () {
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length; 
+            loadSong(currentSongIndex);
+            audioPlayer.play();
+            playButton.classList.replace("bxs-right-arrow", "bxs-pause"); 
+        });
+
+        // Load the first song when the page loads
+        loadSong(currentSongIndex);
+    </script>
+   
     
 </body>
 </html>
